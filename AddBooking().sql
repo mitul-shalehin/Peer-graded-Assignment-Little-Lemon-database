@@ -28,6 +28,11 @@ try:
 
     # Commit the changes
     conn.commit()
+    # Fetch the result (if any)
+    result = cursor.fetchall()
+
+    # Commit the changes
+    conn.commit()
 
     print(f"Booking with ID {booking_id} added successfully.")
 
