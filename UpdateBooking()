@@ -1,0 +1,22 @@
+CREATE PROCEDURE UpdateBooking(
+    IN p_booking_id INT,
+    IN p_customer_id INT,
+    IN p_booking_date DATE,
+    IN p_status VARCHAR(255)
+)
+BEGIN
+    -- Check if the booking_id exists
+    IF (SELECT COUNT(*) FROM Bookings WHERE booking_id = p_booking_id) > 0 THEN
+        -- Update the specified fields
+        UPDATE Bookings
+        SET
+            customer_id = COALESCE(p_customer_id, customer_id),
+            booking_date = COALESCE(p_booking_date, booking_date),
+            status = COALESCE(p_status, status)
+        WHERE booking_id = p_booking_id;
+    ELSE
+        -- Handle the case where the booking doesn't exist
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Booking does not exist';
+    END IF;
+END;
